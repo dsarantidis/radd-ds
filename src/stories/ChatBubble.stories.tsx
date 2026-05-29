@@ -1,44 +1,172 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { ChatBubble } from '../components/ChatBubble/ChatBubble';
+import { ChatBubble, type ChatBubbleProps } from '../components/ChatBubble/ChatBubble';
 import { ChatText } from '../components/ChatBubble/ChatText';
 
-const meta: Meta<typeof ChatBubble> = {
+// Extended args type — combines ChatBubble props with ChatText-level controls
+type StoryArgs = ChatBubbleProps & {
+  /** Message text content */
+  text?: string;
+  /** Show typing animation instead of text */
+  typing?: boolean;
+  /** Show loading skeleton instead of text */
+  loading?: boolean;
+  /** Stretch bubble to full width (for images / cards) */
+  fill?: boolean;
+  /** Show outlined style — distinguishes bot from live agent */
+  showBackground?: boolean;
+  /** Show failed-to-send error below bubble */
+  showError?: boolean;
+};
+
+const meta: Meta<StoryArgs> = {
   title: 'Components/ChatBubble',
   component: ChatBubble,
   parameters: {
     layout: 'centered',
+    controls: { sort: 'alpha' },
     docs: {
       description: {
         component:
-          'ODS Chat Bubble — supports incoming/outgoing messages, typing indicator, skeleton loading, slot content, and action buttons. Compliant with WCAG 2.2 AA.',
+          'ODS Chat Bubble — incoming/outgoing messages, typing indicator, skeleton loading, slot content, and action buttons. WCAG 2.2 AA compliant.',
       },
     },
   },
   argTypes: {
+    // ── ChatText props (shown first — most commonly changed) ──────────
+    text: {
+      control: 'text',
+      description: 'Message text content',
+      table: { category: '1 · Message content' },
+    },
+    typing: {
+      control: 'boolean',
+      description: 'Replace content with typing animation (incoming only)',
+      table: { category: '1 · Message content' },
+    },
+    loading: {
+      control: 'boolean',
+      description: 'Replace content with skeleton shimmer',
+      table: { category: '1 · Message content' },
+    },
+    fill: {
+      control: 'boolean',
+      description: 'Stretch bubble to full available width (images / cards)',
+      table: { category: '1 · Message content' },
+    },
+    showBackground: {
+      control: 'boolean',
+      description: 'Toggle bubble background (false = outlined bot style)',
+      table: { category: '1 · Message content' },
+    },
+    showError: {
+      control: 'boolean',
+      description: 'Show failed-to-send error badge',
+      table: { category: '1 · Message content' },
+    },
+    // ── ChatBubble layout ─────────────────────────────────────────────
     variant: {
       control: 'radio',
       options: ['incoming', 'outgoing'],
       description: 'Message direction',
+      table: { category: '2 · Layout' },
     },
     firstMessage: {
       control: 'boolean',
-      description: 'Shows avatar and flattens the top corner on the avatar side',
+      description: 'Shows avatar and flattens the corner on the avatar side',
+      table: { category: '2 · Layout' },
     },
-    showAvatar: { control: 'boolean' },
-    showHelperText: { control: 'boolean' },
-    helperText: { control: 'text' },
-    showFooter: { control: 'boolean' },
-    showActions: { control: 'boolean' },
-    showActionDislike: { control: 'boolean' },
-    showActionCopy: { control: 'boolean' },
+    showAvatar: {
+      control: 'boolean',
+      table: { category: '2 · Layout' },
+    },
+    // ── Footer ────────────────────────────────────────────────────────
+    showFooter: {
+      control: 'boolean',
+      table: { category: '3 · Footer' },
+    },
+    showHelperText: {
+      control: 'boolean',
+      table: { category: '3 · Footer' },
+    },
+    helperText: {
+      control: 'text',
+      table: { category: '3 · Footer' },
+    },
+    showActions: {
+      control: 'boolean',
+      description: 'Show like / dislike / copy buttons (incoming only)',
+      table: { category: '3 · Footer' },
+    },
+    showActionDislike: {
+      control: 'boolean',
+      table: { category: '3 · Footer' },
+    },
+    showActionCopy: {
+      control: 'boolean',
+      table: { category: '3 · Footer' },
+    },
+    // ── Hide low-priority auto-detected props ─────────────────────────
+    avatarSrc:  { table: { disable: true } },
+    avatarAlt:  { table: { disable: true } },
+    onLike:     { table: { disable: true } },
+    onDislike:  { table: { disable: true } },
+    onCopy:     { table: { disable: true } },
+    className:  { table: { disable: true } },
+    children:   { table: { disable: true } },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof ChatBubble>;
+type Story = StoryObj<StoryArgs>;
 
-// ── Base stories ────────────────────────────────────────────────────
+// ── Playground ──────────────────────────────────────────────────────
+// All controls fully wired — both ChatBubble AND ChatText update live
+
+export const Playground: Story = {
+  name: 'Playground',
+  args: {
+    variant: 'incoming',
+    firstMessage: true,
+    showAvatar: true,
+    showHelperText: true,
+    helperText: '19:12 pm',
+    showFooter: true,
+    showActions: false,
+    showActionDislike: true,
+    showActionCopy: true,
+    text: 'Hello! How can I help you today?',
+    typing: false,
+    loading: false,
+    fill: false,
+    showBackground: true,
+    showError: false,
+  },
+  render: (args) => {
+    const { text, typing, loading, fill, showBackground, showError, ...bubbleProps } = args;
+    return (
+      <ChatBubble
+        {...bubbleProps}
+        onLike={() => console.log('liked')}
+        onDislike={() => console.log('disliked')}
+        onCopy={() => console.log('copied')}
+      >
+        <ChatText
+          variant={args.variant}
+          firstMessage={args.firstMessage}
+          text={text}
+          typing={typing}
+          loading={loading}
+          fill={fill}
+          showBackground={showBackground}
+          showError={showError}
+        />
+      </ChatBubble>
+    );
+  },
+};
+
+// ── Directional variants ────────────────────────────────────────────
 
 export const IncomingText: Story = {
   name: 'Incoming — Text',
@@ -50,12 +178,29 @@ export const IncomingText: Story = {
     helperText: '19:12 pm',
     showFooter: true,
     showActions: false,
+    text: 'Hello! How can I help you today?',
+    typing: false,
+    loading: false,
+    showBackground: true,
+    showError: false,
   },
-  render: (args) => (
-    <ChatBubble {...args}>
-      <ChatText variant="incoming" firstMessage text="Hello! How can I help you today?" />
-    </ChatBubble>
-  ),
+  render: (args) => {
+    const { text, typing, loading, fill, showBackground, showError, ...bubbleProps } = args;
+    return (
+      <ChatBubble {...bubbleProps}>
+        <ChatText
+          variant={args.variant}
+          firstMessage={args.firstMessage}
+          text={text}
+          typing={typing}
+          loading={loading}
+          fill={fill}
+          showBackground={showBackground}
+          showError={showError}
+        />
+      </ChatBubble>
+    );
+  },
 };
 
 export const OutgoingText: Story = {
@@ -67,13 +212,32 @@ export const OutgoingText: Story = {
     helperText: '19:13 pm',
     showFooter: true,
     showActions: false,
+    text: 'I need help resetting my password.',
+    typing: false,
+    loading: false,
+    showBackground: true,
+    showError: false,
   },
-  render: (args) => (
-    <ChatBubble {...args}>
-      <ChatText variant="outgoing" firstMessage text="I need help resetting my password." />
-    </ChatBubble>
-  ),
+  render: (args) => {
+    const { text, typing, loading, fill, showBackground, showError, ...bubbleProps } = args;
+    return (
+      <ChatBubble {...bubbleProps}>
+        <ChatText
+          variant={args.variant}
+          firstMessage={args.firstMessage}
+          text={text}
+          typing={typing}
+          loading={loading}
+          fill={fill}
+          showBackground={showBackground}
+          showError={showError}
+        />
+      </ChatBubble>
+    );
+  },
 };
+
+// ── Multi-bubble ────────────────────────────────────────────────────
 
 export const IncomingMultipleBubbles: Story = {
   name: 'Incoming — Multiple Bubbles',
@@ -87,12 +251,14 @@ export const IncomingMultipleBubbles: Story = {
   },
   render: (args) => (
     <ChatBubble {...args}>
-      <ChatText variant="incoming" firstMessage text="Sure, I can help with that." />
-      <ChatText variant="incoming" firstMessage={false} text="First, go to the login page." />
-      <ChatText variant="incoming" firstMessage={false} text={'Then click "Forgot password" and follow the steps.'} />
+      <ChatText variant={args.variant} firstMessage text="Sure, I can help with that." />
+      <ChatText variant={args.variant} firstMessage={false} text="First, go to the login page." />
+      <ChatText variant={args.variant} firstMessage={false} text={'Then click "Forgot password" and follow the steps.'} />
     </ChatBubble>
   ),
 };
+
+// ── Action buttons ──────────────────────────────────────────────────
 
 export const WithActions: Story = {
   name: 'Incoming — With Actions',
@@ -105,22 +271,31 @@ export const WithActions: Story = {
     showActions: true,
     showActionDislike: true,
     showActionCopy: true,
+    text: "That's a great question! Here's a detailed answer that explains the topic thoroughly.",
+    showBackground: true,
+    showError: false,
   },
-  render: (args) => (
-    <ChatBubble
-      {...args}
-      onLike={() => alert('Liked')}
-      onDislike={() => alert('Disliked')}
-      onCopy={() => alert('Copied')}
-    >
-      <ChatText
-        variant="incoming"
-        firstMessage
-        text="That's a great question! Here's a detailed answer that explains the topic thoroughly."
-      />
-    </ChatBubble>
-  ),
+  render: (args) => {
+    const { text, typing, loading, fill, showBackground, showError, ...bubbleProps } = args;
+    return (
+      <ChatBubble
+        {...bubbleProps}
+        onLike={() => alert('Liked')}
+        onDislike={() => alert('Disliked')}
+        onCopy={() => alert('Copied')}
+      >
+        <ChatText
+          variant={args.variant}
+          firstMessage={args.firstMessage}
+          text={text}
+          showBackground={showBackground}
+        />
+      </ChatBubble>
+    );
+  },
 };
+
+// ── Special states ──────────────────────────────────────────────────
 
 export const TypingIndicator: Story = {
   name: 'Incoming — Typing',
@@ -130,10 +305,11 @@ export const TypingIndicator: Story = {
     showHelperText: false,
     showFooter: false,
     showActions: false,
+    typing: true,
   },
   render: (args) => (
     <ChatBubble {...args}>
-      <ChatText variant="incoming" firstMessage typing />
+      <ChatText variant={args.variant} firstMessage={args.firstMessage} typing={args.typing} />
     </ChatBubble>
   ),
 };
@@ -146,10 +322,11 @@ export const LoadingSkeleton: Story = {
     showHelperText: false,
     showFooter: false,
     showActions: false,
+    loading: true,
   },
   render: (args) => (
     <ChatBubble {...args}>
-      <ChatText variant="incoming" firstMessage loading />
+      <ChatText variant={args.variant} firstMessage={args.firstMessage} loading={args.loading} />
     </ChatBubble>
   ),
 };
@@ -161,10 +338,11 @@ export const OutgoingLoadingSkeleton: Story = {
     firstMessage: true,
     showHelperText: false,
     showFooter: false,
+    loading: true,
   },
   render: (args) => (
     <ChatBubble {...args}>
-      <ChatText variant="outgoing" firstMessage loading />
+      <ChatText variant={args.variant} firstMessage={args.firstMessage} loading={args.loading} />
     </ChatBubble>
   ),
 };
@@ -178,10 +356,11 @@ export const WithImageSlot: Story = {
     helperText: '19:15 pm',
     showFooter: true,
     showActions: false,
+    fill: true,
   },
   render: (args) => (
     <ChatBubble {...args}>
-      <ChatText variant="incoming" firstMessage fill>
+      <ChatText variant={args.variant} firstMessage={args.firstMessage} fill={args.fill}>
         <img
           src="https://picsum.photos/seed/chat/260/195"
           alt="Shared image"
@@ -190,7 +369,7 @@ export const WithImageSlot: Story = {
             width: '100%',
             aspectRatio: '4/3',
             objectFit: 'cover',
-            borderRadius: '0 8px 8px 8px',
+            borderRadius: args.firstMessage ? '0 8px 8px 8px' : '8px',
           }}
         />
       </ChatText>
@@ -203,8 +382,7 @@ export const NoBubbleBackground: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          'Toggle `showBackground=false` to visually distinguish a chatbot from a live human agent.',
+        story: 'Set `showBackground=false` to visually distinguish a chatbot from a live human agent.',
       },
     },
   },
@@ -215,17 +393,23 @@ export const NoBubbleBackground: Story = {
     helperText: '19:12 pm',
     showFooter: true,
     showActions: false,
+    text: "I'm the automated assistant. How can I help?",
+    showBackground: false,
+    showError: false,
   },
-  render: (args) => (
-    <ChatBubble {...args}>
-      <ChatText
-        variant="incoming"
-        firstMessage
-        showBackground={false}
-        text="I'm the automated assistant. How can I help?"
-      />
-    </ChatBubble>
-  ),
+  render: (args) => {
+    const { text, typing, loading, fill, showBackground, showError, ...bubbleProps } = args;
+    return (
+      <ChatBubble {...bubbleProps}>
+        <ChatText
+          variant={args.variant}
+          firstMessage={args.firstMessage}
+          text={text}
+          showBackground={showBackground}
+        />
+      </ChatBubble>
+    );
+  },
 };
 
 export const ErrorState: Story = {
@@ -236,17 +420,24 @@ export const ErrorState: Story = {
     showHelperText: true,
     helperText: '19:14 pm',
     showFooter: true,
+    showActions: false,
+    text: 'Can you please check my account balance?',
+    showError: true,
+    showBackground: true,
   },
-  render: (args) => (
-    <ChatBubble {...args}>
-      <ChatText
-        variant="outgoing"
-        firstMessage
-        showError
-        text="Can you please check my account balance?"
-      />
-    </ChatBubble>
-  ),
+  render: (args) => {
+    const { text, typing, loading, fill, showBackground, showError, ...bubbleProps } = args;
+    return (
+      <ChatBubble {...bubbleProps}>
+        <ChatText
+          variant={args.variant}
+          firstMessage={args.firstMessage}
+          text={text}
+          showError={showError}
+        />
+      </ChatBubble>
+    );
+  },
 };
 
 // ── Full conversation ────────────────────────────────────────────────
@@ -257,8 +448,7 @@ export const FullConversation: Story = {
     layout: 'padded',
     docs: {
       description: {
-        story:
-          'A realistic chat thread demonstrating all states: incoming, outgoing, multiple bubbles, typing, and actions.',
+        story: 'A realistic chat thread — all states: incoming, outgoing, multiple bubbles, typing, actions.',
       },
     },
   },
@@ -267,35 +457,22 @@ export const FullConversation: Story = {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '4px',
+        gap: 'var(--spacing-component-2, 4px)',
         width: '360px',
-        padding: '16px',
-        background: '#fff',
-        borderRadius: '12px',
+        padding: 'var(--spacing-component-5, 16px)',
+        background: 'var(--colours-basic-background, #fff)',
+        borderRadius: 'var(--radius-medium, 12px)',
         boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
       }}
     >
-      {/* Incoming first */}
-      <ChatBubble
-        variant="incoming"
-        firstMessage
-        helperText="19:10 pm"
-        showActions={false}
-      >
+      <ChatBubble variant="incoming" firstMessage helperText="19:10 pm" showActions={false}>
         <ChatText variant="incoming" firstMessage text="Hi there! How can I help you today?" />
       </ChatBubble>
 
-      {/* Outgoing */}
-      <ChatBubble
-        variant="outgoing"
-        firstMessage
-        helperText="19:11 pm"
-        showActions={false}
-      >
+      <ChatBubble variant="outgoing" firstMessage helperText="19:11 pm" showActions={false}>
         <ChatText variant="outgoing" firstMessage text="I need help with my invoice." />
       </ChatBubble>
 
-      {/* Incoming with multiple bubbles */}
       <ChatBubble
         variant="incoming"
         firstMessage
@@ -310,23 +487,11 @@ export const FullConversation: Story = {
         <ChatText variant="incoming" firstMessage={false} text="You'll find it in the email we sent you." />
       </ChatBubble>
 
-      {/* Outgoing */}
-      <ChatBubble
-        variant="outgoing"
-        firstMessage
-        helperText="19:13 pm"
-        showActions={false}
-      >
+      <ChatBubble variant="outgoing" firstMessage helperText="19:13 pm" showActions={false}>
         <ChatText variant="outgoing" firstMessage text="It's INV-2024-00847." />
       </ChatBubble>
 
-      {/* Incoming loading */}
-      <ChatBubble
-        variant="incoming"
-        firstMessage
-        showFooter={false}
-        showActions={false}
-      >
+      <ChatBubble variant="incoming" firstMessage showFooter={false} showActions={false}>
         <ChatText variant="incoming" firstMessage loading />
       </ChatBubble>
     </div>
