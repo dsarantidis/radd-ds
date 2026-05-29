@@ -1,29 +1,8 @@
-/* ── Design tokens ─────────────────────────────────────────────────── */
-.ods-chat-bubble,
-.ods-chat-text {
-  --chat-font: system-ui, 'Segoe UI', sans-serif;
-  --chat-incoming-bg: #f1f1f1;
-  --chat-outgoing-bg: #e20074;
-  --chat-incoming-text: #000000;
-  --chat-outgoing-text: #ffffff;
-  --chat-helper-color: #616161;
-  --chat-radius: 8px;
-  --chat-radius-full: 999px;
-  --chat-pad-h: 16px;
-  --chat-pad-v: 8px;
-  --chat-gap: 4px;
-  --chat-avatar-size: 24px;
-  --chat-max-width: 260px;
-  --chat-offset: 40px;
-  --chat-dot-size: 4px;
-  --chat-dot-gap: 2px;
-  --chat-body-size: 16px;
-  --chat-body-lh: 1.25;
-  --chat-helper-size: 14px;
-  --chat-weight: 500;
-  --chat-action-icon: 20px;
-  --chat-action-touch: 48px;
-}
+/* ── ChatBubble — design tokens from RADD 2.0 Foundations ─────────────
+ * All values reference CSS custom properties from the foundation layer.
+ * Hardcoded fallbacks (after the comma) are for environments where
+ * tokens/index.ts has not been imported yet.
+ * ─────────────────────────────────────────────────────────────────── */
 
 /* ── ChatBubble ────────────────────────────────────────────────────── */
 
@@ -34,7 +13,7 @@
   width: 360px;
   max-width: 100%;
   box-sizing: border-box;
-  font-family: var(--chat-font);
+  font-family: system-ui, sans-serif;
 }
 
 .ods-chat-bubble--outgoing {
@@ -44,15 +23,16 @@
 /* Avatar column */
 .ods-chat-bubble__avatar {
   flex-shrink: 0;
-  width: var(--chat-avatar-size);
+  /* sizing-component-10 → dimension-6 → 24px */
+  width: var(--sizing-component-10, 24px);
 }
 
 .ods-chat-bubble__avatar-img {
-  width: var(--chat-avatar-size);
-  height: var(--chat-avatar-size);
-  border-radius: var(--chat-radius-full);
+  width: var(--sizing-component-10, 24px);
+  height: var(--sizing-component-10, 24px);
+  border-radius: var(--radius-full, 999px);
   overflow: hidden;
-  background: #c8c8c8;
+  background: var(--colours-basic-stroke, #c8c8c8);
 }
 
 .ods-chat-bubble__avatar-img img {
@@ -66,11 +46,11 @@
   display: block;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #b0b0b0 0%, #d8d8d8 100%);
+  background: var(--colours-basic-stroke-subtle, #d8d8d8);
 }
 
 .ods-chat-bubble__avatar-spacer {
-  width: var(--chat-avatar-size);
+  width: var(--sizing-component-10, 24px);
 }
 
 /* Content column */
@@ -93,8 +73,10 @@
 .ods-chat-bubble__messages {
   display: flex;
   flex-direction: column;
-  gap: var(--chat-gap);
-  max-width: calc(100% - var(--chat-offset));
+  /* spacing-component-2 → dimension-1 → 4px */
+  gap: var(--spacing-component-2, 4px);
+  /* offset = spacing-component-9 → dimension-10 → 40px */
+  max-width: calc(100% - var(--spacing-component-9, 40px));
 }
 
 .ods-chat-bubble--outgoing .ods-chat-bubble__messages {
@@ -105,8 +87,9 @@
 .ods-chat-bubble__footer {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding-top: 4px;
+  gap: var(--spacing-component-2, 4px);
+  /* spacing-component-2 → 4px top gap */
+  padding-top: var(--spacing-component-2, 4px);
 }
 
 .ods-chat-bubble--outgoing .ods-chat-bubble__footer {
@@ -114,11 +97,12 @@
 }
 
 .ods-chat-bubble__helper-text {
-  font-family: var(--chat-font);
-  font-size: var(--chat-helper-size);
-  line-height: 1.25;
-  font-weight: var(--chat-weight);
-  color: var(--chat-helper-color);
+  font-family: inherit;
+  /* typography-body-s-regular-size */
+  font-size: var(--typography-body-s-regular-size, 14px);
+  line-height: var(--typography-body-s-regular-line-height, 1.25);
+  font-weight: var(--typography-body-s-regular-weight, 400);
+  color: var(--colours-basic-text-recessive, #616161);
 }
 
 /* Action buttons */
@@ -131,37 +115,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--chat-action-touch);
-  height: var(--chat-action-touch);
+  /* sizing-minimum-tappable-area → dimension-12 → 48px */
+  width: var(--sizing-minimum-tappable-area, 48px);
+  height: var(--sizing-minimum-tappable-area, 48px);
   padding: 0;
   background: none;
   border: none;
-  border-radius: var(--chat-radius-full);
+  border-radius: var(--radius-full, 999px);
   cursor: pointer;
-  color: var(--chat-incoming-text);
+  color: var(--colours-basic-text-dominant, #111111);
   transition: background 0.15s ease;
 }
 
 .ods-chat-bubble__action-btn:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: var(--colours-interaction-states-hover-background-hover, rgba(0, 0, 0, 0.06));
 }
 
 .ods-chat-bubble__action-btn:focus-visible {
-  outline: 2px solid var(--chat-outgoing-bg);
+  outline: 2px solid var(--colours-basic-accent, #e20074);
   outline-offset: 2px;
 }
 
 .ods-chat-bubble__action-btn svg {
-  width: var(--chat-action-icon);
-  height: var(--chat-action-icon);
+  /* sizing-component-8 → dimension-5 → 20px */
+  width: var(--sizing-component-8, 20px);
+  height: var(--sizing-component-8, 20px);
 }
 
 /* ── ChatText ──────────────────────────────────────────────────────── */
 
 .ods-chat-text {
   display: inline-flex;
-  font-family: var(--chat-font);
-  max-width: var(--chat-max-width);
+  font-family: inherit;
+  max-width: 260px; /* chat-specific constraint — no foundation token for this */
 }
 
 .ods-chat-text--fill {
@@ -171,8 +157,10 @@
 }
 
 .ods-chat-text__bubble {
-  padding: var(--chat-pad-v) var(--chat-pad-h);
-  border-radius: var(--chat-radius);
+  /* spacing-component-3 → dimension-2 → 8px vertical */
+  /* spacing-component-5 → dimension-4 → 16px horizontal */
+  padding: var(--spacing-component-3, 8px) var(--spacing-component-5, 16px);
+  border-radius: var(--radius-small, 8px);
   box-sizing: border-box;
   word-break: break-word;
   overflow: hidden;
@@ -180,8 +168,8 @@
 
 /* Incoming bubble */
 .ods-chat-text--incoming .ods-chat-text__bubble {
-  background: var(--chat-incoming-bg);
-  color: var(--chat-incoming-text);
+  background: var(--colours-basic-background-subtle, #f1f1f1);
+  color: var(--colours-basic-text-dominant, #000000);
 }
 
 .ods-chat-text--incoming.ods-chat-text--first-message .ods-chat-text__bubble {
@@ -190,21 +178,22 @@
 
 /* Outgoing bubble */
 .ods-chat-text--outgoing .ods-chat-text__bubble {
-  background: var(--chat-outgoing-bg);
-  color: var(--chat-outgoing-text);
+  background: var(--colours-basic-accent, #e20074);
+  color: var(--colours-basic-text-on-accent, #ffffff);
 }
 
 .ods-chat-text--outgoing.ods-chat-text--first-message .ods-chat-text__bubble {
   border-top-right-radius: 0;
 }
 
-/* No background (for agent/bot distinction) */
+/* No background — outlined style (bot vs agent distinction) */
 .ods-chat-text--no-bg .ods-chat-text__bubble {
   background: transparent;
-  border: 1.5px solid var(--chat-incoming-bg);
+  border: 1.5px solid var(--colours-basic-stroke, #e5e5e5);
+  color: var(--colours-basic-text-dominant, #111);
 }
 
-/* Fill variant (images, cards, slots) */
+/* Fill variant — images, cards, slots */
 .ods-chat-text--fill .ods-chat-text__bubble {
   width: 100%;
   padding: 0;
@@ -212,9 +201,9 @@
 
 /* Text */
 .ods-chat-text__text {
-  font-size: var(--chat-body-size);
-  line-height: var(--chat-body-lh);
-  font-weight: var(--chat-weight);
+  font-size: var(--typography-body-m-regular-size, 16px);
+  line-height: var(--typography-body-m-regular-line-height, 1.25);
+  font-weight: var(--typography-body-m-regular-weight, 400);
   margin: 0;
 }
 
@@ -223,15 +212,15 @@
   width: 100%;
 }
 
-/* Error */
+/* Error badge */
 .ods-chat-text__error {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: #c0392b;
-  font-size: 12px;
-  font-family: var(--chat-font);
-  margin-top: 4px;
+  gap: var(--spacing-component-2, 4px);
+  color: var(--colours-functional-destructive-standard, #c0392b);
+  font-size: var(--typography-body-s-regular-size, 12px);
+  font-family: inherit;
+  margin-top: var(--spacing-component-2, 4px);
 }
 
 /* ── Skeleton ──────────────────────────────────────────────────────── */
@@ -239,19 +228,19 @@
 .ods-chat-skeleton {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--spacing-component-2, 4px);
   padding: 2px 0;
   min-width: 120px;
 }
 
 .ods-chat-skeleton__line {
-  height: 12px;
-  border-radius: 6px;
+  height: var(--sizing-component-3, 12px);
+  border-radius: var(--radius-extra-small, 6px);
   background: linear-gradient(
     90deg,
-    rgba(0, 0, 0, 0.08) 25%,
-    rgba(0, 0, 0, 0.04) 50%,
-    rgba(0, 0, 0, 0.08) 75%
+    var(--colours-basic-stroke-subtle, rgba(0, 0, 0, 0.08)) 25%,
+    var(--colours-basic-background-subtle, rgba(0, 0, 0, 0.04)) 50%,
+    var(--colours-basic-stroke-subtle, rgba(0, 0, 0, 0.08)) 75%
   );
   background-size: 200% 100%;
   animation: chat-skeleton-shimmer 1.4s infinite linear;
@@ -277,14 +266,16 @@
 .ods-typing-animation {
   display: flex;
   align-items: center;
-  gap: var(--chat-dot-gap);
-  padding: 4px 0;
+  /* spacing-component-2 → 4px, but dots use a tighter 2px gap */
+  gap: 2px;
+  padding: var(--spacing-component-2, 4px) 0;
 }
 
 .ods-typing-animation__dot {
-  width: var(--chat-dot-size);
-  height: var(--chat-dot-size);
-  border-radius: var(--chat-radius-full);
+  /* sizing-component-3 → dimension-1 → 4px */
+  width: var(--sizing-component-3, 4px);
+  height: var(--sizing-component-3, 4px);
+  border-radius: var(--radius-full, 999px);
   background: currentColor;
   animation: chat-typing-bounce 1.2s ease-in-out infinite;
 }
