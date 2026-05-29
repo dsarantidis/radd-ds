@@ -33,80 +33,89 @@ const meta: Meta<StoryArgs> = {
     },
   },
   argTypes: {
-    // ── ChatText props (shown first — most commonly changed) ──────────
-    text: {
-      control: 'text',
-      description: 'Message text content',
-      table: { category: '1 · Message content' },
-    },
-    typing: {
-      control: 'boolean',
-      description: 'Replace content with typing animation (incoming only)',
-      table: { category: '1 · Message content' },
-    },
-    loading: {
-      control: 'boolean',
-      description: 'Replace content with skeleton shimmer',
-      table: { category: '1 · Message content' },
-    },
-    fill: {
-      control: 'boolean',
-      description: 'Stretch bubble to full available width (images / cards)',
-      table: { category: '1 · Message content' },
-    },
-    showBackground: {
-      control: 'boolean',
-      description: 'Toggle bubble background (false = outlined bot style)',
-      table: { category: '1 · Message content' },
-    },
-    showError: {
-      control: 'boolean',
-      description: 'Show failed-to-send error badge',
-      table: { category: '1 · Message content' },
-    },
-    // ── ChatBubble layout ─────────────────────────────────────────────
+    // ── RADD prop order: Type → Variant → Size → Other → Disabled → Read Only → State ──
+
+    // Type
     variant: {
       control: 'radio',
       options: ['incoming', 'outgoing'],
-      description: 'Message direction',
-      table: { category: '2 · Layout' },
+      description: 'Message direction (Type)',
+      table: { category: 'A · Type' },
     },
+
+    // Variant
     firstMessage: {
       control: 'boolean',
-      description: 'Shows avatar and flattens the corner on the avatar side',
-      table: { category: '2 · Layout' },
+      description: 'First in a sequence — shows avatar and flattens the avatar-side corner (Variant)',
+      table: { category: 'B · Variant' },
     },
+
+    // Content (Other)
+    text: {
+      control: 'text',
+      description: 'Message text content',
+      table: { category: 'C · Content' },
+    },
+    typing: {
+      control: 'boolean',
+      description: 'Show typing animation instead of text (incoming only)',
+      table: { category: 'C · Content' },
+    },
+    loading: {
+      control: 'boolean',
+      description: 'Show skeleton shimmer while content loads',
+      table: { category: 'C · Content' },
+    },
+    fill: {
+      control: 'boolean',
+      description: 'Stretch bubble to full available width — use for images / cards',
+      table: { category: 'C · Content' },
+    },
+
+    // Display toggles (Other)
     showAvatar: {
       control: 'boolean',
-      table: { category: '2 · Layout' },
+      table: { category: 'D · Display' },
     },
-    // ── Footer ────────────────────────────────────────────────────────
+    showBackground: {
+      control: 'boolean',
+      description: 'Toggle bubble background (false = outlined, distinguishes bot from agent)',
+      table: { category: 'D · Display' },
+    },
     showFooter: {
       control: 'boolean',
-      table: { category: '3 · Footer' },
+      table: { category: 'D · Display' },
     },
     showHelperText: {
       control: 'boolean',
-      table: { category: '3 · Footer' },
+      table: { category: 'D · Display' },
     },
     helperText: {
       control: 'text',
-      table: { category: '3 · Footer' },
+      table: { category: 'D · Display' },
     },
     showActions: {
       control: 'boolean',
-      description: 'Show like / dislike / copy buttons (incoming only)',
-      table: { category: '3 · Footer' },
+      description: 'Show like / dislike / copy action buttons (incoming only)',
+      table: { category: 'D · Display' },
     },
     showActionDislike: {
       control: 'boolean',
-      table: { category: '3 · Footer' },
+      table: { category: 'D · Display' },
     },
     showActionCopy: {
       control: 'boolean',
-      table: { category: '3 · Footer' },
+      table: { category: 'D · Display' },
     },
-    // ── Hide low-priority auto-detected props ─────────────────────────
+
+    // State (always last per RADD rules)
+    showError: {
+      control: 'boolean',
+      description: 'Show failed-to-send error badge (State)',
+      table: { category: 'E · State' },
+    },
+
+    // Hidden
     avatarSrc:  { table: { disable: true } },
     avatarAlt:  { table: { disable: true } },
     onLike:     { table: { disable: true } },
@@ -127,18 +136,18 @@ export const Playground: Story = {
   name: 'Playground',
   args: {
     variant: 'incoming',
-    firstMessage: true,
-    showAvatar: true,
+    firstMessage: false,
+    showAvatar: false,
     showHelperText: true,
     helperText: '19:12 pm',
     showFooter: true,
-    showActions: false,
+    showActions: true,
     showActionDislike: true,
     showActionCopy: true,
-    text: 'Hello! How can I help you today?',
+    text: "vchcghfcghcghghghghghjgjhjghgjkgjkgjfgjjkgfhhjkjhkjhfhjfhjjfhjh",
     typing: false,
     loading: false,
-    fill: false,
+    fill: true,
     showBackground: true,
     showError: false,
   },
