@@ -1,0 +1,60 @@
+{
+  "columns": {
+    "1-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.1-columns}"
+    },
+    "10-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.10-columns}"
+    },
+    "11-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.11-columns}"
+    },
+    "12-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.12-columns}"
+    },
+    "13-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.13-columns}"
+    },
+    "14-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.14-columns}"
+    },
+    "2-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.2-columns}"
+    },
+    "3-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.3-columns}"
+    },
+    "4-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.4-columns}"
+    },
+    "5-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.5-columns}"
+    },
+    "6-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.6-columns}"
+    },
+    "7-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.7-columns}"
+    },
+    "8-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.8-columns}"
+    },
+    "9-columns": {
+      "type": "size",
+      "value": "{breakpoint.columns.9-columns}"
+    }
+  }
+}

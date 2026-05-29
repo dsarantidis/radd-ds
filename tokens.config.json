@@ -1,0 +1,25 @@
+{
+  "$schema": "https://figma-console-mcp.southleft.com/schemas/tokens.config.v1.json",
+  "source": {
+    "dir": "tokens/source",
+    "canonical": "style-dictionary-v3"
+  },
+  "generated": {
+    "dir": "tokens/generated",
+    "formats": [
+      {
+        "format": "style-dictionary-v3",
+        "splitByCollection": true
+      },
+      {
+        "format": "css-vars",
+        "splitByCollection": true,
+        "splitByMode": true,
+        "resolveAliases": true,
+        "colorFormat": "hex",
+        "sizeUnit": "rem"
+      }
+    ]
+  },
+  "conflictResolution": "ask"
+}
