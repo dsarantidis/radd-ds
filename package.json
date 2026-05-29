@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "tokens:build": "node tokens/build.mjs && node style-dictionary.config.mjs",
+    "tokens:build": "node tokens/build.mjs && node tokens/generate-themes.mjs && node style-dictionary.config.mjs",
     "tokens:all": "npm run tokens:build"
   },
   "dependencies": {
