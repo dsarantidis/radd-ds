@@ -50,6 +50,7 @@ export function ChatText({
     firstMessage && 'ods-chat-text--first-message',
     fill && 'ods-chat-text--fill',
     !showBackground && 'ods-chat-text--no-bg',
+    typing && 'ods-chat-text--typing',
     className,
   ]
     .filter(Boolean)

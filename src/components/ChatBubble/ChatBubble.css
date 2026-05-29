@@ -8,8 +8,10 @@
 
 .ods-chat-bubble {
   display: flex;
-  align-items: flex-end;
-  gap: 8px;
+  /* Avatar aligns to the TOP of the message group (Figma spec) */
+  align-items: flex-start;
+  /* avatar-to-content gap: spacing-component-2 → dimension-1 → 4px */
+  gap: var(--spacing-component-2, 4px);
   width: 360px;
   max-width: 100%;
   box-sizing: border-box;
@@ -69,14 +71,18 @@
   align-items: flex-end;
 }
 
-/* Messages stack */
+/* Messages stack + footer share the same max-width constraint (Figma spec) */
+.ods-chat-bubble__messages,
+.ods-chat-bubble__footer {
+  /* offset = spacing-component-9 → dimension-10 → 40px on opposite side */
+  max-width: calc(100% - var(--spacing-component-9, 40px));
+}
+
 .ods-chat-bubble__messages {
   display: flex;
   flex-direction: column;
   /* spacing-component-2 → dimension-1 → 4px */
   gap: var(--spacing-component-2, 4px);
-  /* offset = spacing-component-9 → dimension-10 → 40px */
-  max-width: calc(100% - var(--spacing-component-9, 40px));
 }
 
 .ods-chat-bubble--outgoing .ods-chat-bubble__messages {
@@ -87,9 +93,9 @@
 .ods-chat-bubble__footer {
   display: flex;
   align-items: center;
+  /* min-height matches action button touch target (Figma: 48px) */
+  min-height: var(--sizing-minimum-tappable-area, 48px);
   gap: var(--spacing-component-2, 4px);
-  /* spacing-component-2 → 4px top gap */
-  padding-top: var(--spacing-component-2, 4px);
 }
 
 .ods-chat-bubble--outgoing .ods-chat-bubble__footer {
@@ -98,11 +104,13 @@
 
 .ods-chat-bubble__helper-text {
   font-family: inherit;
-  /* typography-body-s-regular-size */
   font-size: var(--typography-body-s-regular-size, 14px);
   line-height: var(--typography-body-s-regular-line-height, 1.25);
   font-weight: var(--typography-body-s-regular-weight, 400);
   color: var(--colours-basic-text-recessive, #616161);
+  /* Figma: paddingTop/Bottom 12px on helper text frame */
+  padding-top: var(--spacing-component-4, 12px);
+  padding-bottom: var(--spacing-component-4, 12px);
 }
 
 /* Action buttons */
@@ -197,6 +205,11 @@
 .ods-chat-text--fill .ods-chat-text__bubble {
   width: 100%;
   padding: 0;
+}
+
+/* Typing state: Figma spec uses 16px on ALL sides (not 8px top/bottom) */
+.ods-chat-text--typing .ods-chat-text__bubble {
+  padding: var(--spacing-component-5, 16px);
 }
 
 /* Text */
